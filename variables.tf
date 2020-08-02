@@ -1,4 +1,4 @@
-variable "eks_cluster_name" {
+variable "do_cluster_name" {
   description = "Name of the EKS cluster upon which to configure Flux"
 }
 
@@ -24,7 +24,7 @@ variable "github_repository_branch" {
 variable "flux_docker_tag" {
   description = "Tag of flux Docker image to pull"
   type        = string
-  default     = "1.18.0"
+  default     = "1.20.0"
 }
 
 variable "flux_known_hosts" {

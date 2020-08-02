@@ -8,11 +8,13 @@ cluster by doing the following things:
 - Add the public key to the config repo in Github as a [deploy key][2]
 - Configure RBAC rules and deploy flux + memcached to the cluster
 
+This is straight-forward port of [limejump/terraform-k8s-flux-bootstrap][5] which
+was only modified to work with DigitalOcean instead of AWS.
 
 ## Current Limitations
 
 - Only supports Github for the config repo (and may only work for org repos)
-- Assumes the Kubernetes is an Amazon [EKS][3] cluster
+- Assumes a DigitalOcean [Kubernetes][3] cluster
 - Only supports deploying to the 'flux' namespace (but will be
     automatically created)
 
@@ -22,14 +24,13 @@ cluster by doing the following things:
 Prerequisites:
 
 - `GITHUB_TOKEN` environment variable present with appropriate Github API key
-- AWS region and credentials configured via appropriate `provider` block or
-    environment variables / config file etc
+- `DIGITALOCEAN_ACCESS_TOKEN` environment variable present with appropriate DO Access Token
 
 ```hcl
 module "flux-bootstrap" {
-  source = "github.com/limejump/terraform-k8s-flux-bootstrap"
+  source = "github.com/alltheops/terraform-k8s-flux-bootstrap"
 
-  eks_cluster_name       = "your-cluster-name-here"
+  do_cluster_name        = "your-cluster-name-here"
   github_org_name        = "your-org-name-here"
   github_repository_name = "your-repo-name-here"
 }
@@ -47,5 +48,6 @@ automatically deploy the Helm component! You can also deploy Tiller like this!
 
 [1]: https://github.com/weaveworks/flux/
 [2]: https://developer.github.com/v3/guides/managing-deploy-keys/#deploy-keys
-[3]: https://aws.amazon.com/eks/
+[3]: https://www.digitalocean.com/products/kubernetes/
 [4]: https://github.com/weaveworks/flux/tree/master/deploy-helm
+[5]: https://github.com/limejump/terraform-k8s-flux-bootstrap

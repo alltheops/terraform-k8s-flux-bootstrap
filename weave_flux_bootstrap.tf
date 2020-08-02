@@ -2,8 +2,8 @@
 # will bootstrap the configuration of Flux such that all the manifests from the
 # repository will be automatically applied when the cluster is created.
 
-data "aws_eks_cluster" "cluster" {
-  name = var.eks_cluster_name
+data "digitalocean_kubernetes_cluster" "cluster" {
+  name = var.do_cluster_name
 }
 
 data "aws_eks_cluster_auth" "cluster" {
@@ -11,10 +11,15 @@ data "aws_eks_cluster_auth" "cluster" {
 }
 
 provider "kubernetes" {
-  host                   = data.aws_eks_cluster.cluster.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
-  token                  = data.aws_eks_cluster_auth.cluster.token
-  load_config_file       = false
+  version = "~> 1.11"
+
+  load_config_file = "false"
+
+  host                   = data.digitalocean_kubernetes_cluster.cluster.endpoint
+  client_certificate     = base64decode(data.digitalocean_kubernetes_cluster.cluster.kube_config.0.client_certificate)
+  client_key             = base64decode(data.digitalocean_kubernetes_cluster.cluster.kube_config.0.client_key)
+  cluster_ca_certificate = base64decode(data.digitalocean_kubernetes_cluster.cluster.kube_config.0.cluster_ca_certificate)
+  token                  = data.digitalocean_kubernetes_cluster.cluster.kube_config.0.token
 }
 
 locals {
