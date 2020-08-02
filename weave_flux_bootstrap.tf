@@ -6,10 +6,6 @@ data "digitalocean_kubernetes_cluster" "cluster" {
   name = var.do_cluster_name
 }
 
-data "aws_eks_cluster_auth" "cluster" {
-  name = var.eks_cluster_name
-}
-
 provider "kubernetes" {
   version = "~> 1.11"
 
